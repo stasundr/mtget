@@ -2,7 +2,7 @@
 
 ## Installation
 ```
-git clone ...
+git clone https://github.com/stasundr/mtget.git
 cd mtget
 npm install
 ```
