@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 const fs = require('fs');
 const request = require('superagent');
 const yargs = require('yargs');
@@ -28,8 +27,8 @@ const argv = yargs
     describe: 'provide a path to output folder'
   })
   .demandOption(
-    ['numbers', 'out'],
-    'Please provide both GenBank accession numbers and output folder to work with mtget'
+  ['numbers', 'out'],
+  'Please provide both GenBank accession numbers and output folder to work with mtget'
   )
   .help().argv;
 
@@ -51,8 +50,7 @@ function getGenbankIds() {
     end = Math.max(start, end);
 
     const pack = [];
-    const originalLength = raw.match(/^\w+\d+\.*\d*/)[0].replace(prefix, '')
-      .length;
+    const originalLength = raw.match(/^\w+\d+\.*\d*/)[0].replace(prefix, '').length;
     for (let i = start; i < end; i += 1) {
       let zeroes = '';
       for (let j = 0; j < originalLength - `${i}`.length; j += 1)
@@ -73,22 +71,18 @@ const genbankQueue = queue((id, callback) => {
   getFastaByGenbankId(id).then(data => {
     const label = data
       .split('\n')[0]
-      .replace('>', '')
-      .replace(';', '')
+      .replace(/[>,;]/g, '')
       .replace(/\s.*:/, ' ')
-      .replace(
-        /(homo|sapiens|isolate|DNA|region|sequence|D-loop|complete|partial|mt|genome|mitochondrion|mitochondrial|mitochondria)/ig,
-        ''
-      )
-      .replace(/\s+/g, '_')
-      .replace(/,+/g, '')
-      .replace(/_+/g, '_')
+      .replace(/(homo|sapiens|isolate|DNA|region|sequence|D-loop|complete|partial|mt|genome|mitochondrion|mitochondrial|mitochondria)/ig, '')
+      .replace(/(\s|_)+/g, '_')
       .replace(/_$/, '');
-    console.log(id, label);
+
+    console.log(`${id} -> ${argv.out}/${label}.fasta`);
+
     fs.writeFileSync(`${argv.out}/${label}.fasta`, data, 'ascii');
 
     callback();
   });
-}, 5);
+}, 8);
 
 genbankQueue.push(getGenbankIds());
