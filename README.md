@@ -1,6 +1,9 @@
 # mtget
+Скрипт для скачивания последовательностей митохондриальных ДНК из [GenBank](https://www.ncbi.nlm.nih.gov/genbank/).
 
 ## Installation
+Для работы требуется ```git``` и [```node```](https://nodejs.org).
+
 ```
 git clone https://github.com/stasundr/mtget.git
 cd mtget
