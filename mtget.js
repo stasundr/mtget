@@ -27,8 +27,8 @@ const argv = yargs
     describe: 'provide a path to output folder'
   })
   .demandOption(
-  ['numbers', 'out'],
-  'Please provide both GenBank accession numbers and output folder to work with mtget'
+    ['numbers', 'out'],
+    'Please provide both GenBank accession numbers and output folder to work with mtget'
   )
   .help().argv;
 
@@ -40,7 +40,6 @@ function getGenbankIds() {
   if (argv.numbers.match(/^\w+\d+\.*\d*\-\w+\d+\.*\d*$/)) {
     const ids = [];
     const raw = argv.numbers;
-    const indexes = [];
     const prefix = raw.match(/^[A-Za-z]+/)[0];
 
     let start = parseInt(raw.match(/^\w+\d+\.*\d*/)[0].replace(prefix, ''), 10);
@@ -50,11 +49,11 @@ function getGenbankIds() {
     end = Math.max(start, end);
 
     const pack = [];
-    const originalLength = raw.match(/^\w+\d+\.*\d*/)[0].replace(prefix, '').length;
-    for (let i = start; i < end; i += 1) {
+    const originalLength = raw.match(/^\w+\d+\.*\d*/)[0].replace(prefix, '')
+      .length;
+    for (let i = start; i <= end; i += 1) {
       let zeroes = '';
-      for (let j = 0; j < originalLength - `${i}`.length; j += 1)
-        zeroes += '0';
+      for (let j = 0; j < originalLength - `${i}`.length; j += 1) zeroes += '0';
 
       pack.push(`${prefix}${zeroes}${i}`);
     }
@@ -73,7 +72,10 @@ const genbankQueue = queue((id, callback) => {
       .split('\n')[0]
       .replace(/[>,;]/g, '')
       .replace(/\s.*:/, ' ')
-      .replace(/(homo|sapiens|isolate|DNA|region|sequence|D-loop|complete|partial|mt|genome|mitochondrion|mitochondrial|mitochondria)/ig, '')
+      .replace(
+        /(homo|sapiens|isolate|DNA|region|sequence|D-loop|complete|partial|mt|genome|mitochondrion|mitochondrial|mitochondria)/gi,
+        ''
+      )
       .replace(/(\s|_)+/g, '_')
       .replace(/_$/, '');
 
