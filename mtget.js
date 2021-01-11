@@ -83,8 +83,8 @@ const genbankQueue = queue((id, callback) => {
 
     fs.writeFileSync(`${argv.out}/${label}.fasta`, data, 'ascii');
 
-    callback();
+    setTimeout(callback, 1000);
   });
-}, 8);
+}, 1);
 
 genbankQueue.push(getGenbankIds());
